@@ -7,14 +7,13 @@ pipeline {
     stages {
         stage('Cloning Git') {
             steps {
-                git 'https://github.com/your-username/your-repo'
+                git 'https://github.com/Samireddebbarhi/TP5_DEVOPS'
             }
         }
         stage('Building image') {
             steps {
                 script {
                     def dockerImage = docker.build(registry + ":$BUILD_NUMBER")
-                    // Store it for later stages
                     env.DOCKER_IMAGE_NAME = registry + ":$BUILD_NUMBER"
                 }
             }
@@ -34,6 +33,11 @@ pipeline {
                         dockerImage.push()
                     }
                 }
+            }
+        }
+        stage('Deploy image') {
+            steps {
+                bat "docker run -d $registry:$BUILD_NUMBER"
             }
         }
     }
